@@ -11,6 +11,25 @@ kapısı dahil **kural kural** (R1–R14) modeller.
 
 ## Kurulum
 
+### Windows — tek tıkla çalıştırma
+
+`run.bat` dosyasına **çift tıklayın**: ilk çalıştırmada sanal ortam (`.venv`)
+kurulur ve bağımlılıklar yüklenir; sonra web arayüzü başlar ve tarayıcı
+otomatik açılır (Python 3.11+ kurulu ve PATH'te olmalı). IDE gerekmez.
+
+```bat
+run.bat                 :: web arayüzü (http://127.0.0.1:8000)
+run.bat 8080            :: farklı port
+run.bat sim 10 42 5     :: headless koşu (gün, tohum, replikasyon)
+run.bat validate        :: Arena A.4 doğrulaması + validation_report.md
+run.bat test            :: test takımı
+```
+
+Bağımlılıkları güncellemek gerekirse `.venv\.deps_ok` dosyasını silip
+`run.bat`'ı yeniden çalıştırın.
+
+### Elle kurulum (Linux/macOS/Windows)
+
 ```bash
 pip install -e .            # simpy, numpy, pandas, pyyaml, fastapi, uvicorn
 pip install pytest          # testler için
