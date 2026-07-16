@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IGLINE-PySim — IGU Üretim Hattı Simülatörü</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%230d1117'/><rect x='3' y='3' width='4' height='10' fill='%232dd4bf'/><rect x='9' y='3' width='4' height='10' fill='%2360a5fa'/></svg>">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header id="topbar">
+  <div class="brand">IGLINE<span>PySim</span></div>
+  <nav id="tabs">
+    <button data-tab="params" class="tab active">Parametreler</button>
+    <button data-tab="scada" class="tab">SCADA</button>
+    <button data-tab="dash" class="tab">Dashboard</button>
+  </nav>
+  <div id="clockbox">
+    <div id="simclock">—</div>
+    <div id="simmeta"><span id="simday">gün —</span> · <span id="shift">vardiya 07–16</span></div>
+  </div>
+  <div id="livekpis">
+    <div class="lk"><label>IGU/saat</label><b id="k-thr">—</b></div>
+    <div class="lk"><label>vCurOrder</label><b id="k-cur">—</b></div>
+    <div class="lk"><label>vIGUCurOrder</label><b id="k-igucur">—</b></div>
+    <div class="lk"><label>IGU</label><b id="k-igu">—</b></div>
+    <div class="lk starve" id="k-starve" title="Sequencer starve bayrağı">STARVE</div>
+  </div>
+  <div id="speedbox">
+    <button class="sp" data-sp="pause" title="Duraklat">⏸</button>
+    <button class="sp" data-sp="resume" title="Devam">▶</button>
+    <button class="sp" data-sp="step" title="Adım (0,5 dk)">⏭</button>
+    <span class="spsep"></span>
+    <button class="sp spd" data-sp="1">1×</button>
+    <button class="sp spd" data-sp="10">10×</button>
+    <button class="sp spd active" data-sp="60">60×</button>
+    <button class="sp spd" data-sp="300">300×</button>
+    <button class="sp spd" data-sp="max">MAX</button>
+  </div>
+  <div id="runstate" class="chip idle">boşta</div>
+  <div id="progress"><div id="progressfill"></div></div>
+</header>
+
+<main>
+  <section id="tab-params" class="tabpane active"></section>
+  <section id="tab-scada" class="tabpane">
+    <div id="scada-wrap">
+      <div id="scada-svgbox"></div>
+      <aside id="scada-side">
+        <div id="detail-panel">
+          <h3 id="detail-title">İstasyon detayı</h3>
+          <div id="detail-body"><p class="muted">Bir istasyon kartına tıklayın.</p></div>
+        </div>
+        <div id="alarm-panel">
+          <h3>Alarmlar <span class="muted">(FT/FJ flush · starve · eşik)</span></h3>
+          <ul id="alarm-list"></ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <section id="tab-dash" class="tabpane"></section>
+</main>
+
+<script src="/static/vendor/chart.umd.min.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/params.js"></script>
+<script src="/static/scada.js"></script>
+<script src="/static/dashboard.js"></script>
+</body>
+</html>

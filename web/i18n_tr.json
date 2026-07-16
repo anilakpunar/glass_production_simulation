@@ -1,0 +1,32 @@
+{
+  "stations": {
+    "kesim_1": "KESİM 1", "kesim_2": "KESİM 2",
+    "rodaj_1": "RODAJ 1", "rodaj_2": "RODAJ 2",
+    "furnace_1000": "FIRIN 1000", "furnace_1600": "FIRIN 1600",
+    "igu_1": "IGU MONTAJ", "nesting": "NESTING", "orders": "SİPARİŞ",
+    "sequencer": "SEQUENCER", "dispatch": "DISPATCHER",
+    "temper_build": "YATAK OLUŞTURMA", "match": "SORTING 2 / MATCH",
+    "igu_gate": "SİPARİŞ KAPISI", "shipping": "SEVKİYAT"
+  },
+  "states": {
+    "BUSY": "MEŞGUL", "IDLE": "BOŞTA", "STARVED": "AÇ", "BLOCKED": "BLOKE",
+    "SETUP": "AYAR", "RUNNING": "ÇALIŞIYOR"
+  },
+  "events": {
+    "SEIZE": "başladı", "RELEASE": "bitti", "OPEN": "açıldı", "ADD": "eklendi",
+    "CLOSE": "kapandı", "FLUSH": "flush", "MATCH": "eşleşti",
+    "PASS_GATE": "kapıdan geçti", "DONE": "tamamlandı", "BATCH": "parti",
+    "ASSIGN": "atandı", "STARVE": "açlık", "SPLIT": "ayrıldı"
+  },
+  "buffers": {
+    "hold_glass": "Cam Havuzu", "token_buffer": "Token Rafı",
+    "order_buffer": "Order Buffer", "temper_build": "Temper Yatak",
+    "match_q": "Match Kuyruğu", "igu_order_q": "IGU Sıra Kapısı"
+  },
+  "kpi": {
+    "igu_done": "Tamamlanan IGU", "otd": "Zamanında Teslim",
+    "flow": "Ort. Akış (Kesim→IGU)", "jumbo_fill": "Jumbo Doluluk",
+    "temper_fill": "Temper Doluluk", "bottleneck": "Darboğaz",
+    "wip": "WIP (hat içi)"
+  }
+}
