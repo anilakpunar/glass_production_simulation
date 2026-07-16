@@ -1,0 +1,65 @@
+# IGLINE-PySim default parameters (Arena Scenario 3 equivalents).
+# All durations given in the unit noted per field; the engine converts to
+# minutes (base time unit) internally.
+run:
+  start_datetime: "2026-01-05 07:00"   # Arena REPLICATE start
+  days: 10                              # replication length in working days
+  hours_per_day: 9                      # Arena "9 Hours Per Day" calendar
+  seed: 42
+  replications: 1
+  snapshot_interval_min: 0.5            # live state broadcast granularity (sim minutes)
+  event_log: true                       # write event_log.jsonl
+
+orders:
+  daily_target: 20000                   # vDailyTarget (units per batch)
+  batch_interval_s: 162000              # CREATE interval (= 2700 min = 5 working days)
+  first_batch_s: 60                     # first creation event at t = 60 s
+  qty_mean: 340                         # LOGN arithmetic mean (Arena LOGN(340,650))
+  qty_sd: 650                           # LOGN arithmetic std dev
+  qty_cap: 2500                         # MN(...,2500) upper clip
+  due_gamma_shape: 1.81                 # GAMM(30.3, 1.81) -> Arena GAMM(beta=scale, alpha=shape)
+  due_gamma_scale: 30.3                 # days
+  product_mix_file: "data/product_mix.csv"  # 66-row DISC table (cum_prob, code)
+
+nesting:
+  jumbo_w_mm: 6000                      # vJumboW
+  jumbo_h_mm: 3210                      # vJumboH
+  kerf_mm: 5                            # vKerf
+  rotation_ok: true                     # vRotOK
+  due_window_days: 5                    # vDDwin
+  max_token_wip: 8                      # vMaxTok
+  flush_grace_s: 900                    # vJGrace (jumbo age before starve flush)
+  flush_fill_threshold: 0.85            # accum >= 0.85 * jumbo area triggers starve flush
+  flush_period_min: 5                   # FJ controller scan period
+
+cutting:
+  machines: 2
+  trim_tria_s: [30, 35, 45]             # per-jumbo trim TRIA
+  break_tria_s: [6, 8, 10]              # per-piece break TRIA
+  lookahead_orders: 40                  # vLookahead
+  dispatch_period_min: 0.5              # dispatcher scan period (Arena EXPO(1) min)
+  dispatch_expo: false                  # true -> EXPO(dispatch_period_min) instead of fixed
+
+sequencer:
+  igu_window_orders: 8                  # vIGUWindow
+  strict_pane_feed: false               # false = Arena-faithful 2x threshold; true = paneCount x need
+
+edging:
+  lines: 2
+  feed_mm_s: 11000                      # vfeed (height/vfeed then width/vfeed seconds)
+
+temper:
+  furnace_width_mm: [1050, 1600]        # vFurnaceWidth (furnace "1000" is really 1050 mm)
+  heat_zone_len_mm: [22000, 22000]      # vL_heat
+  tunnel_len_mm: [22000, 22000]         # vFurnLen
+  row_gap_mm: 300                       # vRowGap
+  glass_gap_mm: 50                      # vGap
+  bed_timeout_s: 300                    # vTmax (FT flush)
+  divert_threshold: 2                   # vDivN (furnace-1 queue length divert rule)
+  furnace_of: [2, 0, 1, 2, 0, 0, 1, 1, 2, 1, 2, 0]           # vFurnaceOf, glassType 1..12 (0 = bypass)
+  heat_time_s: [145, 196, 240, 160, 216, 196, 160, 216, 216, 200, 160, 0]  # vHeatT, glassType 1..12
+
+igu:
+  stations: 3                           # IGU_1 resource capacity
+  process_tria_s: [24, 27, 32]
+  setup_s: 0                            # tSetupIGU (applied on order change)
