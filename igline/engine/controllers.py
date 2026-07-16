@@ -170,6 +170,11 @@ def sequencer(line: "Line"):
             line.starve = 1
             line.sig_dispatch.fire()   # starve unlocks the lookahead rule
             line.sig_fj.fire()
+            # debounced alarm for the UI (starve flickers between sets)
+            if env.now - getattr(line, "_last_starve_alarm", -10.0) > 5.0:
+                line._last_starve_alarm = env.now
+                line.log(env.now, "sequencer", "STARVE",
+                         f"o{line.cur_order}", {"cur": line.cur_order})
         yield line.sig_seq.wait()
 
 
