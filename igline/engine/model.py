@@ -65,7 +65,7 @@ class PoolGroup:
 class BedState:
     """Open temper bed per glass type (vWAccum, vWCnt, vTOpenT, vTempNo)."""
     glass_type: int
-    bed_no: int = 1
+    bed_no: int = 0              # Arena vTempNo starts at 0
     w_accum: float = 0.0
     w_cnt: int = 0
     open_t: float = 0.0
@@ -113,6 +113,9 @@ class Line:
         self.daily_target = o["daily_target"]
         self.batch_interval = o["batch_interval_s"] * S
         self.first_batch = o["first_batch_s"] * S
+        # Arena mod 116$ "Assign Cycle": every order's glass3 is overwritten
+        # to 12 (double glazing) regardless of the decoded product code.
+        self.force_double = bool(o.get("force_double", True))
 
         n = params["nesting"]
         self.jumbo_w = n["jumbo_w_mm"]
@@ -307,6 +310,9 @@ class Line:
         env = self.env
         code = self.product_disc.sample(self.rng["mix"])
         d = decode_product(code)
+        if self.force_double:
+            d["glass3"] = 12
+            d["pane_count"] = 2
         qty = max(1, round(min(float(self.p["orders"]["qty_cap"]),
                                logn_arena(self.rng["qty"],
                                           self.p["orders"]["qty_mean"],
@@ -322,18 +328,19 @@ class Line:
                       t_start=env.now, pane_count=d["pane_count"])
         self.orders[no] = order
         self.order_fed[no] = 0
-        # Explode into glass panes -> Hold Glass pool. Arena SEPARATE runs per
-        # unit (G1, G2[, G3], next unit ...), so pane seq numbers interleave;
-        # groups keep one deque per pane but respect the interleaved seq.
+        # Explode into glass panes -> Hold Glass pool. Arena numbers pieces
+        # per pane (vPix(orderNo, glassNo)): seq = orderNo*1e5 + i*10 + 1 is
+        # IDENTICAL for pane1#i and pane2#i, and the LVF(seq) queue breaks
+        # ties by insertion order (G1 before G2) - i.e. panes interleave as
+        # matched pairs. Groups keep one deque per pane; the pool head pick
+        # breaks seq ties by glass_no.
         panes = [(1, d["glass1"]), (2, d["glass2"])]
         if d["glass3"] != 12:
             panes.append((3, d["glass3"]))
-        pc = len(panes)
-        for j, (glass_no, gtype) in enumerate(panes):
+        for glass_no, gtype in panes:
             glasses = deque()
             for i in range(qty):
-                piece = i * pc + j + 1
-                seq = no * 100000 + piece * 10 + 1
+                seq = no * 100000 + (i + 1) * 10 + 1
                 glasses.append(Glass(order_no=no, glass_no=glass_no, glass_type=gtype,
                                      seq=seq, width=d["width"], height=d["height"],
                                      area=d["area"], due_date=due))
@@ -367,19 +374,20 @@ class Line:
         return glass
 
     def pool_pop_head(self) -> Glass:
-        """Pop the glass with the globally smallest seq. Pane groups of the
-        earliest order interleave, so pick the min-head-seq group among the
-        leading order's groups."""
+        """Pop the glass with the globally smallest (seq, glass_no). Pane
+        groups of the earliest order share seq values (Arena vPix numbering),
+        so ties break by pane number = LVF insertion order."""
         first_o = self.pool[0].order_no
         best = 0
-        best_seq = self.pool[0].glasses[0].seq
+        best_key = (self.pool[0].glasses[0].seq, self.pool[0].glass_no)
         for i in range(1, min(3, len(self.pool))):
             grp = self.pool[i]
             if grp.order_no != first_o:
                 break
-            if grp.glasses[0].seq < best_seq:
+            key = (grp.glasses[0].seq, grp.glass_no)
+            if key < best_key:
                 best = i
-                best_seq = grp.glasses[0].seq
+                best_key = key
         return self.pool_pop(best)
 
     # --------------------------------------------------------------- nesting
@@ -626,19 +634,20 @@ class Line:
         order.done += 1
         order.last_igu_t = env.now
         self.igu_done_total += 1
-        g1 = unit.glasses[0]
+        # Arena's Batch IGU groups with "Last" representative (= pane 2)
+        rep = unit.glasses[-1]
         self.glass_out += len(unit.glasses)
         cyc_order = env.now - order.t_start
         cyc_igu = env.now - unit.t_match
-        cyc_kesim = env.now - g1.t_kesim
+        cyc_kesim = env.now - rep.t_kesim
         self.tally_cyc_order_igu.record(cyc_order)
         self.tally_cyc_igu.record(cyc_igu)
         self.tally_cyc_kesim_igu.record(cyc_kesim)
         self.rows_igu_results.append(
-            (unit.order_no, unit.order_no, g1.jumbo_id, order.pane_count,
+            (unit.order_no, unit.order_no, rep.jumbo_id, order.pane_count,
              order.glass1, order.glass2, order.glass3, order.width, order.height,
              round(order.area, 4), order.order_date, order.due_date,
-             round(g1.t_kesim, 3), round(unit.t_match, 3), round(env.now, 3),
+             round(rep.t_kesim, 3), round(unit.t_match, 3), round(env.now, 3),
              round(cyc_kesim, 3), round(cyc_igu, 3)))
         self.log(env.now, "igu_1", "DONE", f"o{unit.order_no}",
                  {"done": order.done, "need": order.qty})

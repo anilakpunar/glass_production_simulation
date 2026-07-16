@@ -19,7 +19,8 @@ orders:
   qty_cap: 2500                         # MN(...,2500) upper clip
   due_gamma_shape: 1.81                 # GAMM(30.3, 1.81) -> Arena GAMM(beta=scale, alpha=shape)
   due_gamma_scale: 30.3                 # days
-  product_mix_file: "data/product_mix.csv"  # 66-row DISC table (cum_prob, code)
+  product_mix_file: "data/product_mix.csv"  # 66-row DISC table (cum_prob, code), verbatim from mod 203$
+  force_double: true                    # Arena mod 116$: glass3 overwritten to 12 (all orders double-glazed)
 
 nesting:
   jumbo_w_mm: 6000                      # vJumboW

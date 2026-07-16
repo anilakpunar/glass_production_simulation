@@ -1,0 +1,299 @@
+PROJECT,      "Unnamed Project","Rockwell Automation",,,No,Yes,Yes,Yes,No,No,No,No,No,No;
+
+ATTRIBUTES:   paneCount,DATATYPE(Real):
+              tokN,DATATYPE(Real):
+              orderNo,DATATYPE(Real):
+              unitKey,DATATYPE(Real):
+              glassType,DATATYPE(Real):
+              tTransit,DATATYPE(Real):
+              tGT,DATATYPE(Real):
+              tCap,DATATYPE(Real):
+              width,DATATYPE(Real):
+              tStart,DATATYPE(Real):
+              tokMin,DATATYPE(Real):
+              vspeed,DATATYPE(Real):
+              orderDate,DATATYPE(Real):
+              glassNo,DATATYPE(Real):
+              myLine,DATATYPE(Real):
+              tFurn,DATATYPE(Real):
+              tHeat,DATATYPE(Real):
+              pH,DATATYPE(Real):
+              height,DATATYPE(Real):
+              jumboID,DATATYPE(Real):
+              sTime,DATATYPE(Real):
+              pW,DATATYPE(Real):
+              tokJumbo,DATATYPE(Real):
+              product,DATATYPE(Real):
+              glass1,DATATYPE(Real):
+              glass2,DATATYPE(Real):
+              glass3,DATATYPE(Real):
+              tIGU,DATATYPE(Real):
+              tPitch,DATATYPE(Real):
+              dueDate,DATATYPE(Real):
+              quantity,DATATYPE(Real):
+              tokMax,DATATYPE(Real):
+              area,DATATYPE(Real):
+              seq,DATATYPE(Real):
+              tKesim,DATATYPE(Real):
+              tempID,DATATYPE(Real);
+
+FILES:        jumboDetail,"jumboDetail.txt",Sequential,Free Format,Dispose,,Hold:
+              iguResults,"iguResults.txt",Sequential,Free Format,Dispose,,Hold:
+              tempResults,"tempResults.txt",Sequential,Free Format,Dispose,,Hold:
+              jumboResults,"jumboResults.txt",Sequential,Free Format,Dispose,,Hold:
+              orderList,"C:\Users\HP\Desktop\20260703\2026_order_list.txt",Sequential,Free Format,Dispose,,Rewind;
+
+VARIABLES:    vStarve,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Separate Glass2.NumberOut Dup,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Width Fit.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Separate FT Timer.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              vIGUDone(1500),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vFTPend,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vJMax(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vTCloseID,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vAccum(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vNumOrders,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),5:
+              Batch Furnace Load.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vTempNo(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vOrdCnt,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide Idle Machine.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vTOpenT(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vRotOK,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),1:
+              Separate Glass2.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              vFJPend,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vCnt(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vFurnaceOf(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),2,0,1,2,0,0,1,1,2,1,2,0:
+              vG3of(1500),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Separate 8.NumberOut Dup,CLEAR(Statistics),CATEGORY("Exclude"):
+              vPix(1500,3),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vMaxTok,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),8:
+              vCloseSize,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Create Order.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Fit.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide IGU Bitti.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Dispose Token.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vTmax,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),300:
+              vLookahead,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),40:
+              vBedSize(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vtemper_1,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vtemper_2,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vGenAcc,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),0:
+              Decide Hat.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              FT Yatak Yeni Acildi.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Separate Glass3.NumberOut Dup,CLEAR(Statistics),CATEGORY("Exclude"):
+              Create Packer.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vWCnt(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide Pane Count.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Which Furnace.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Create Jumbo Flush.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Idle Machine.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide 33.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vDailyTarget,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),20000:
+              Decide Which Furnace.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vCurOrder,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Separate Glass3.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              vSumOrder,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide jumbo senaryo.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Batch IGU.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide FT Tekrar.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Dispose FT Timer.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vRowGap,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),300:
+              vIGUPassed(1500),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vDay,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              FT Yatak Yeni Acildi.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vJGrace,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),900:
+              Decide Lookahead.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Fit.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vL_heat(2),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),22000:
+              Route Pane 2.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide jumbo senaryo2.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Width Fit.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vJumboNo(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vUsedY(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide jumbo senaryo2.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Route Pane 2.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vWAccum(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Dispose IGU.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vIGUWindow,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),8:
+              Create Temper Flush.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vJMin(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vOrderFed(1500),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              tSetupIGU,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),0:
+              Decide FJ Tekrar.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vDivN,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),2:
+              G3 var mi.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vShH(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Separate Token.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              vJumboSenaryo,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),2:
+              Decide tokN_1.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Pane Count.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vShX(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide tokN_1.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide 33.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide FJ Tekrar.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vBufG(1500,3),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vJOpenT(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vTCloseSize,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vJumboH,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),3210:
+              vFedG(1500,3),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide jumbo senaryo.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vOrderNeed(1500),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide Temper?.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vKerf,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),5:
+              vWFill,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Decide Lookahead.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vCloseID,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vJumboW,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),6000:
+              Decide 16.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vRelWin,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),14:
+              vDDwin,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),5:
+              vGenDay,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Separate FT Timer.NumberOut Dup,CLEAR(Statistics),CATEGORY("Exclude"):
+              vIGUCurOrder,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),1:
+              Decide IGU Bitti.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vMaxOrderDate,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),10:
+              Decide Temper?.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              vfeed,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),11000:
+              Create Dispatcher.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide jumbo senaryo3.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Separate FJ Token.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide jumbo senaryo3.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vFurnLen(2),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),22000:
+              Decide tokN_2.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Separate Glass1.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              Dispose 10.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vCutID1,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vCutID2,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vHeatT(12),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),145,196,240,160,216,196,160,216,
+              216,200,160,0.0:
+              vF,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              vIGULastOrder,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              FT Timer Gecerli mi.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              Separate Glass1.NumberOut Dup,CLEAR(Statistics),CATEGORY("Exclude"):
+              vW,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),2:
+              vJumboArea,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),19.26:
+              vIGUArr(1500),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Separate 8.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              Separate Split Load.NumberOut Orig,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide tokN_2.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Separate Token.NumberOut Dup,CLEAR(Statistics),CATEGORY("Exclude"):
+              vTokWIP,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),0:
+              vMinOrderDate,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),0:
+              Decide 16.NumberOut False,CLEAR(Statistics),CATEGORY("Exclude"):
+              G3 var mi.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              vFill,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real):
+              Separate FJ Token.NumberOut Dup,CLEAR(Statistics),CATEGORY("Exclude"):
+              vGap,CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),50:
+              Dispose Carrier.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide Hat.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Decide FT Tekrar.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude"):
+              Create sequencer.NumberOut,CLEAR(Statistics),CATEGORY("Exclude"):
+              vFurnaceWidth(2),CLEAR(System),CATEGORY("User Specified-User Specified"),DATATYPE(Real),1050,1600:
+              FT Timer Gecerli mi.NumberOut True,CLEAR(Statistics),CATEGORY("Exclude");
+
+QUEUES:       Hold IGU Order.Queue,LVF(orderNo),,AUTOSTATS(Yes,,):
+              Hold Glass.Queue,LVF(seq),,AUTOSTATS(No,,):
+              Hold FT Wait.Queue,FIFO,,AUTOSTATS(No,,):
+              Hold Disp.Queue,FIFO,,AUTOSTATS(No,,):
+              Match 2.Queue1,FIFO,,AUTOSTATS(Yes,,):
+              Match 2.Queue2,FIFO,,AUTOSTATS(Yes,,):
+              Match 2.Queue3,FIFO,,AUTOSTATS(Yes,,):
+              Match IGU2.Queue1,FIFO,,AUTOSTATS(Yes,,):
+              Match IGU2.Queue2,FIFO,,AUTOSTATS(Yes,,):
+              Seize Entrance_1600.Queue,FIFO,,AUTOSTATS(No,,):
+              Seize Kesim_1.Queue,FIFO,,AUTOSTATS(No,,):
+              Hold Wait Glass.Queue,FIFO,,AUTOSTATS(No,,):
+              Seize IGU.Queue,FIFO,,AUTOSTATS(Yes,,):
+              Batch IGU.Queue,FIFO,,AUTOSTATS(No,,):
+              Seize Rodaj_2 W.Queue,FIFO,,AUTOSTATS(No,,):
+              Batch Furnace Load.Queue,FIFO,,AUTOSTATS(Yes,,):
+              Batch IGU2.Queue,FIFO,,AUTOSTATS(No,,):
+              Hold Token Buffer.Queue,LVF(tokMin),,AUTOSTATS(No,,):
+              Hold FJ Wait.Queue,FIFO,,AUTOSTATS(No,,):
+              Hold Jumbo Build.Queue,FIFO,,AUTOSTATS(No,,):
+              Seize Rodaj_2 H.Queue,FIFO,,AUTOSTATS(No,,):
+              Hold order.Queue,FIFO,,AUTOSTATS(No,,):
+              Seize Kesim_2.Queue,FIFO,,AUTOSTATS(No,,):
+              Seize Rodaj_1 W.Queue,FIFO,,AUTOSTATS(No,,):
+              Batch IGU3.Queue,FIFO,,AUTOSTATS(No,,):
+              Hold Temper Build.Queue,FIFO,,AUTOSTATS(Yes,,):
+              Seize Rodaj_1 H.Queue,FIFO,,AUTOSTATS(No,,):
+              Order Buffer.Queue,FIFO,,AUTOSTATS(Yes,,):
+              Hold 6.Queue,FIFO,,AUTOSTATS(No,,):
+              Queue 1,FIFO,,AUTOSTATS(No,,):
+              Hold Disp Lookahead.Queue,FIFO,,AUTOSTATS(Yes,,):
+              Seize Entrance_1000.Queue,FIFO,,AUTOSTATS(No,,):
+              Hold 11.Queue,FIFO,,AUTOSTATS(No,,);
+
+PICTURES:     Picture.Airplane:
+              Picture.Green Ball:
+              Picture.Blue Page:
+              Picture.Telephone:
+              Picture.Blue Ball:
+              Picture.Yellow Page:
+              Picture.EMail:
+              Picture.Yellow Ball:
+              Picture.Bike:
+              Picture.Report:
+              Picture.Van:
+              Picture.Widgets:
+              Picture.Envelope:
+              Picture.Fax:
+              Picture.Truck:
+              Picture.Person:
+              Picture.Letter:
+              Picture.Box:
+              Picture.Woman:
+              Picture.Package:
+              Picture.Man:
+              Picture.Diskette:
+              Picture.Boat:
+              Picture.Red Page:
+              Picture.Ball:
+              Picture.Green Page:
+              Picture.Red Ball;
+
+RESOURCES:    Kesim_1,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(Yes,,):
+              Kesim_2,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(Yes,,):
+              Furnace_Entrance_1000,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(Yes,,):
+              Furnace_Entrance_1600,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(Yes,,):
+              Rodaj_1_H,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(Yes,,):
+              Rodaj_1_W,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(No,,):
+              IGU_1,Capacity(3),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(Yes,,):
+              Rodaj_2_H,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(Yes,,):
+              Rodaj_2_W,Capacity(1),,,COST(0.0,0.0,0.0),CATEGORY(Resources),,AUTOSTATS(No,,);
+
+COUNTERS:     Record Count IGU,,,,DATABASE(,"Count","User Specified","Record Count IGU");
+
+TALLIES:      Cycle Order_IGU,,DATABASE(,"Interval","User Specified","Cycle Order_IGU"):
+              Temper Fill,,DATABASE(,"Expression","User Specified","Temper Fill"):
+              Cycle Kesim_IGU,,DATABASE(,"Interval","User Specified","Cycle Kesim_IGU"):
+              Cycle IGU,,DATABASE(,"Interval","User Specified","Cycle IGU"):
+              Jumbo Fill,,DATABASE(,"Expression","User Specified","Jumbo Fill"):
+              Jumbo Fill Flush,,DATABASE(,"Expression","User Specified","Jumbo Fill Flush");
+
+DSTATS:       NQ(Seize Rodaj_1 H.Queue),Statistic Rodaj 1,"",DATABASE(,"Time Persistent","User Specified","Statistic Rodaj 1"):
+              NQ(Seize Rodaj_2 H.Queue),Statistic Rodaj 2,"",DATABASE(,"Time Persistent","User Specified","Statistic Rodaj 2"):
+              NQ(Match IGU2.Queue1),Statistic Match IGU2_1,"",DATABASE(,"Time Persistent","User Specified",
+              "Statistic Match IGU2_1"):
+              NQ(Match IGU2.Queue2),Statistic Match IGU2_2,"",DATABASE(,"Time Persistent","User Specified",
+              "Statistic Match IGU2_2"):
+              NQ(Hold IGU Order.Queue),Statistic IGU Order,"",DATABASE(,"Time Persistent","User Specified","Statistic IGU Order"):
+              NQ(Order Buffer.Queue),Statistic Order Buffer,"",DATABASE(,"Time Persistent","User Specified",
+              "Statistic Order Buffer"):
+              NQ(Hold Jumbo Build.Queue),Statistic Jumbo Build,"",DATABASE(,"Time Persistent","User Specified",
+              "Statistic Jumbo Build"):
+              NQ(Batch IGU.Queue),Statistic Batch IGU,"",DATABASE(,"Time Persistent","User Specified","Statistic Batch IGU"):
+              NQ(Hold Glass.Queue),Statistic Glass,"",DATABASE(,"Time Persistent","User Specified","Statistic Glass");
+
+OUTPUTS:      vCurOrder,"",Statistic CurOrder,DATABASE(,"Output","User Specified","Statistic CurOrder"):
+              vSumOrder,"",Statistic SumOrder,DATABASE(,"Output","User Specified","Statistic SumOrder"):
+              vIGUCurOrder,"",Statistic IGUCurOrder,DATABASE(,"Output","User Specified","Statistic IGUCurOrder");
+
+REPLICATE,    1,,DaysToBaseTime(10),Yes,Yes,,,,9,Minutes,No,No,,DATETIME("Jan 05, 2026 07:00:00"),Yes,No;
+
+ENTITIES:     glass,Picture.Report,0.0,0.0,0.0,0.0,0.0,0.0,AUTOSTATS(Yes,,):
+              sequencer,Picture.Report,0.0,0.0,0.0,0.0,0.0,0.0,AUTOSTATS(No,,):
+              Packer,Picture.Report,0.0,0.0,0.0,0.0,0.0,0.0,AUTOSTATS(No,,):
+              Order,Picture.Report,0.0,0.0,0.0,0.0,0.0,0.0,AUTOSTATS(No,,);
+

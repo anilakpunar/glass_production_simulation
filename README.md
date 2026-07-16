@@ -105,16 +105,24 @@ Koşu başlangıcında etkin set `runs/<run_id>/params.yaml` olarak dondurulur.
 - Kırık cam/yeniden işleme bu senaryoda yoktur; `Line.rework_hook` genişleme
   noktası olarak boş bırakılmıştır.
 
-## Ürün karması hakkında önemli not
+## Ürün karması ve Arena kaynak dosyaları
 
-Orijinal Arena exp dosyasının (203$ bloğu) 66 satırlık DISC tablosu bu depoda
-mevcut olmadığından `data/product_mix.csv`, kod şemasına ve A.4 referans
-metriklerine kalibre edilmiş **sentetik bir tablodur**
-(`tools/gen_product_mix.py`; belgelenmiş ilk satır birebir korunur). Gerçek
-tablo elde edildiğinde aynı iki kolonla (`cum_prob,code`) dosyayı değiştirmek
-veya UI'dan yüklemek yeterlidir — başka hiçbir şey değişmez. Doğrulama
-sonuçları ve veri kaynaklı sapmaların kök neden analizi için
-`validation_report.md` dosyasına bakın.
+`docs/arena/` altında orijinal Arena kaynak dosyaları (`senaryo3_mod_dosyasi.txt`,
+`senaryo3_exp_dosyasi.txt`) bulunur. `data/product_mix.csv`, mod dosyasındaki
+203$ bloğunun 66 satırlık DISC tablosunun **birebir kopyasıdır**
+(`tools/extract_product_mix.py` ile çıkarılır). Kaynak dosyalardan doğrulanan
+önemli davranışlar:
+
+- **116$ `glass3=12`**: her sipariş, ürün kodundan çözülen glass3 ne olursa
+  olsun çift cama zorlanır (`orders.force_double`, varsayılan `true`; üçlü cam
+  desteği motorda mevcuttur ve `false` ile açılır).
+- **vPix seq numaralandırması**: pane'ler ünite bazında eşleşmiş çiftler
+  hâlinde (LVF eşitlik kuralıyla) havuza girer.
+- **Packer 1 ms çekim gecikmesi (Delay 20)**: FJ flush denetleyicisinin
+  yerleştirmeler arasında tarama yapmasını sağlar — Jumbo Fill / Fill Flush
+  istatistik ayrımını doğrudan belirler.
+- **Dispatcher 0,1 sn atama gecikmesi (Delay 13)**, vJumboNo/vTempNo'nun
+  0'dan başlaması, vJMax'ın son siparişle güncellenmesi.
 
 ## Doğrulama (Arena A.4)
 
@@ -123,11 +131,14 @@ python -m igline validate --replications 5 --seed 42
 ```
 
 5 × 10 günlük replikasyon ortalaması A.4 tolerans bantlarıyla karşılaştırılır
-ve `validation_report.md` üretilir. Mevcut durumla 11 metrik bantta
-(tamamlanan IGU, kesim/IGU/fırın/rodaj kullanımları, jumbo/temper doluluk,
-kesilen jumbo, toplam adet); kalan sapmaların tamamı raporda kök nedenleriyle
-belgelenmiştir (vDDwin termin-penceresi önceliklendirme hacmi, sentetik ürün
-karması, Arena'nın SPLIT yeniden-sayımı kaynaklı tanımsal cam sayacı farkı).
+ve `validation_report.md` üretilir. Gerçek DISC tablosuyla 10 metrik bantta
+(tamamlanan IGU, kesim/fırın-1600/rodaj kullanımları, jumbo fill + flush fill,
+temper fill, kesilen jumbo, toplam adet); kalan sapmaların
+tamamı raporda nicel kök nedenleriyle belgelenmiştir (vDDwin termin-penceresi
+önceliklendirme hacminin örneklem gerçekleşmesi, fırın-1000 için beklenen rota
+payında fiziksel üst sınırın Arena değerinin altında kalması, Arena'nın
+SPLIT/FT-timer/token varlık yeniden-yaratımlarını sayan tanımsal
+glass.NumberIn/Out farkı).
 
 ## Performans
 

@@ -1,0 +1,1749 @@
+
+;
+;
+;     Model statements for module:  BasicProcess.Create 1 (Create Order)
+;
+
+208$          CREATE,        1,SecondstoBaseTime(60),Order:SecondstoBaseTime(162000):NEXT(209$);
+
+209$          ASSIGN:        Create Order.NumberOut=Create Order.NumberOut + 1:NEXT(180$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 43 (Assign 43)
+;
+180$          ASSIGN:        vDay=vDay+1:NEXT(203$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 57 (Assign Generate Order)
+;
+203$          ASSIGN:        glass1=
+                             DISC(0.06246,15125261778, 0.11474,34125141555, 0.16674,13124750829, 0.21783,13125160895, 0.25043,75034861612, 0.28213,15124151554, 0.31238,43047091676, 0.34125,13127591546, 0.37002,15124161555, 0.39518,34123681438, 0.42026,15126751554, 0.444,15126431388, 0.46678,15124131542, 0.48872,12017181482, 0.51059,45124881594, 0.53211,15126011560, 0.55245,13125751256, 0.56974,84125941550, 0.58625,15126761555, 0.6027,34125181671, 0.61854,15124261619, 0.63434,84124961550, 0.64887,13126991573, 0.6628,15123461578, 0.67623,45126561635, 0.68955,31124060760, 0.70287,13126971636, 0.71562,15124121540, 0.72792,34125131553, 0.7399,15126031530, 0.75126,44125131554, 0.76241,13124361434, 0.77223,15126541609, 0.78198,15124201436, 0.79156,15126761556, 0.80104,34125181471, 0.81038,34125131064, 0.8188,43125201831, 0.82709,12013681438, 0.83535,15126741619, 0.84351,12015131313, 0.85166,15125551025, 0.85974,15124051341, 0.86758,12016661578, 0.87517,15124051340, 0.88273,12025801310, 0.89009,34126681882, 0.8974,15126001807, 0.90457,42124060760, 0.91168,11125201831, 0.91834,34124461592, 0.92467,45035160640, 0.93094,15125551255, 0.93687,43125931965, 0.94263,13125631192, 0.9482,43037081600, 0.95377,13126991348, 0.95928,34125131561, 0.96475,73125180604, 0.96995,31037061902, 0.97511,44125241608, 0.98026,11125291080, 0.98527,11124340784, 0.99025,34125981692, 0.99517,44125161545, 1.0,13124740778):
+                             width=glass1 - AINT(glass1/10000000)*10000000:
+                             height=width - AINT(width/10000)*10000:
+                             width=AINT(width/10000):
+                             glass1=AINT(glass1/10000000):
+                             glass3=glass1 - AINT(glass1/100)*100:
+                             glass2=AINT(glass1/100) - AINT(glass1/1000)*10:
+                             glass1=AINT(glass1/1000):
+                             area=width*height/1000000:
+                             quantity=MX(1,ANINT(MN(2500,LOGN(340,650)))):
+                             vGenAcc=vGenAcc + quantity:
+                             orderDate=vDay:
+                             dueDate=orderDate + ANINT(GAMM(30.3,1.81)):NEXT(204$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 8 (Separate 8)
+;
+204$          DUPLICATE,     100 - 50:
+                             1,214$,50:NEXT(213$);
+
+213$          ASSIGN:        Separate 8.NumberOut Orig=Separate 8.NumberOut Orig + 1:NEXT(205$);
+
+214$          ASSIGN:        Separate 8.NumberOut Dup=Separate 8.NumberOut Dup + 1:NEXT(116$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 33 (Decide 33)
+;
+205$          BRANCH,        1:
+                             If,vGenAcc < vDailyTarget,215$,Yes:
+                             Else,216$,Yes;
+215$          ASSIGN:        Decide 33.NumberOut True=Decide 33.NumberOut True + 1:NEXT(203$);
+
+216$          ASSIGN:        Decide 33.NumberOut False=Decide 33.NumberOut False + 1:NEXT(206$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 58 (Assign 58)
+;
+206$          ASSIGN:        vGenAcc=0:NEXT(162$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Dispose 10 (Dispose 10)
+;
+162$          ASSIGN:        Dispose 10.NumberOut=Dispose 10.NumberOut + 1;
+217$          DISPOSE:       No;
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 25 (Assign Cycle)
+;
+116$          ASSIGN:        glass3=12:NEXT(181$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 45 (Assign 45)
+;
+181$          ASSIGN:        vOrdCnt=vOrdCnt + 1:
+                             orderNo=vOrdCnt:
+                             vOrderNeed(orderNo)=quantity:
+                             vG3of(orderNo)=glass3:
+                             vSumOrder=vSumOrder + quantity:
+                             tStart=tnow:NEXT(0$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 1 (Separate Glass1)
+;
+0$            DUPLICATE,     100 - 50:
+                             quantity,220$,50:NEXT(219$);
+
+219$          ASSIGN:        Separate Glass1.NumberOut Orig=Separate Glass1.NumberOut Orig + 1:NEXT(1$);
+
+220$          ASSIGN:        Separate Glass1.NumberOut Dup=Separate Glass1.NumberOut Dup + 1:NEXT(4$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 2 (Separate Glass2)
+;
+1$            DUPLICATE,     100 - 50:
+                             quantity,223$,50:NEXT(222$);
+
+222$          ASSIGN:        Separate Glass2.NumberOut Orig=Separate Glass2.NumberOut Orig + 1:NEXT(2$);
+
+223$          ASSIGN:        Separate Glass2.NumberOut Dup=Separate Glass2.NumberOut Dup + 1:NEXT(5$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 3 (Separate Glass3)
+;
+2$            DUPLICATE,     100 - 50:
+                             quantity*(glass3<>12),226$,50:NEXT(225$);
+
+225$          ASSIGN:        Separate Glass3.NumberOut Orig=Separate Glass3.NumberOut Orig + 1:NEXT(3$);
+
+226$          ASSIGN:        Separate Glass3.NumberOut Dup=Separate Glass3.NumberOut Dup + 1:NEXT(6$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Dispose 1 (Dispose Carrier)
+;
+3$            ASSIGN:        Dispose Carrier.NumberOut=Dispose Carrier.NumberOut + 1;
+227$          DISPOSE:       No;
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 3 (Assign Glass3)
+;
+6$            ASSIGN:        glassNo=3:
+                             glassType=glass3:
+                             Entity.Type=glass:
+                             vPix(orderNo,3)=vPix(orderNo,3) + 1:
+                             seq=orderNo*100000 + vPix(orderNo,3)*10 + 1:NEXT(7$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 1 (Hold Glass)
+;
+7$            QUEUE,         Hold Glass.Queue:DETACH;
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 2 (Assign Glass2)
+;
+5$            ASSIGN:        glassNo=2:
+                             glassType=glass2:
+                             Entity.Type=glass:
+                             vPix(orderNo,2)=vPix(orderNo,2) + 1:
+                             seq=orderNo*100000 + vPix(orderNo,2)*10 + 1:NEXT(7$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 1 (Assign Glass1)
+;
+4$            ASSIGN:        glassNo=1:
+                             glassType=glass1:
+                             Entity.Type=glass:
+                             vPix(orderNo,1)=vPix(orderNo,1) + 1:
+                             seq=orderNo*100000 + vPix(orderNo,1)*10 + 1:NEXT(7$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Create 2 (Create Packer)
+;
+
+228$          CREATE,        1,SecondstoBaseTime(0.01),Packer:SecondstoBaseTime(EXPO(1)),1:NEXT(229$);
+
+229$          ASSIGN:        Create Packer.NumberOut=Create Packer.NumberOut + 1:NEXT(202$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 20 (Delay 20)
+;
+202$          DELAY:         0.000016666666667,,Other:NEXT(9$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 2 (Hold Wait Glass)
+;
+9$            QUEUE,         Hold Wait Glass.Queue;
+              SCAN:          NQ(Hold Glass.Queue) > 0 .AND. vTokWIP < vMaxTok:NEXT(158$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 25 (Decide jumbo senaryo3)
+;
+158$          BRANCH,        1:
+                             If,vJumboSenaryo==1,232$,Yes:
+                             Else,233$,Yes;
+232$          ASSIGN:        Decide jumbo senaryo3.NumberOut True=Decide jumbo senaryo3.NumberOut True + 1:NEXT(11$);
+
+233$          ASSIGN:        Decide jumbo senaryo3.NumberOut False=Decide jumbo senaryo3.NumberOut False + 1:NEXT(157$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 1 (Remove Glass)
+;
+11$           REMOVE:        1,Hold Glass.Queue,156$:NEXT(202$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 24 (Decide jumbo senaryo2)
+;
+156$          BRANCH,        1:
+                             If,vJumboSenaryo==1,234$,Yes:
+                             Else,235$,Yes;
+234$          ASSIGN:        Decide jumbo senaryo2.NumberOut True=Decide jumbo senaryo2.NumberOut True + 1:NEXT(12$);
+
+235$          ASSIGN:        Decide jumbo senaryo2.NumberOut False=Decide jumbo senaryo2.NumberOut False + 1:NEXT(149$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 1 (Decide Fit)
+;
+12$           BRANCH,        1:
+                             If,vJumboArea>=vAccum(glassType)+area,236$,Yes:
+                             Else,237$,Yes;
+236$          ASSIGN:        Decide Fit.NumberOut True=Decide Fit.NumberOut True + 1:NEXT(13$);
+
+237$          ASSIGN:        Decide Fit.NumberOut False=Decide Fit.NumberOut False + 1:NEXT(16$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 4 (Assign addOpen)
+;
+13$           ASSIGN:        vShH(glassType)=MX(vShH(glassType), pH + vKerf):
+                             vShX(glassType)=vShX(glassType) + pW + vKerf:
+                             vAccum(glassType)=vAccum(glassType)+area:
+                             vCnt(glassType)=vCnt(glassType)+1:
+                             vJMin(glassType)=(vCnt(glassType)==1)*orderNo + (vCnt(glassType)>1)*MN(vJMin(glassType), orderNo):
+                             vJMax(glassType)=orderNo:
+                             jumboID=glassType*10000+vJumboNo(glassType):
+                             vFJPend=1:
+                             vJOpenT(glassType)=(vCnt(glassType)==1)*TNOW + (vCnt(glassType)>1)*vJOpenT(glassType):NEXT(166$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Signal 1 (Signal FJ 1)
+;
+166$          SIGNAL:        101:NEXT(148$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.ReadWrite 6 (Write Jumbo Detail)
+;
+148$          WRITE,         jumboDetail:
+                             glassType,
+                             vJumboNo(glassType),
+                             orderNo,
+                             glassNo,
+                             width,
+                             height,
+                             area,
+                             tnow:NEXT(14$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 3 (Hold Jumbo Build)
+;
+14$           QUEUE,         Hold Jumbo Build.Queue:DETACH;
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 5 (Assign closeOpen)
+;
+16$           ASSIGN:        vCloseID=glassType*10000+vJumboNo(glassType):
+                             vCloseSize=vCnt(glassType):
+                             vFill=vAccum(glassType)/vJumboArea:NEXT(17$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 1 (Record Jumbo Fill)
+;
+17$           TALLY:         Jumbo Fill,vFill,1:NEXT(18$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.ReadWrite 2 (Write Jumbo Result)
+;
+18$           WRITE,         jumboResults:
+                             glassType,
+                             vJumboNo(glassType),
+                             vCloseSize,
+                             vAccum(glassType),
+                             vFill:NEXT(19$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 6 (Assign Reset Token)
+;
+19$           ASSIGN:        tokMin=vJMin(glassType):
+                             tokMax=vJMax(glassType):
+                             vJumboNo(glassType)=vJumboNo(glassType)+1:
+                             vAccum(glassType)=0:
+                             vCnt(glassType)=0:
+                             tokJumbo=vCloseID:
+                             tokN=vCloseSize:
+                             vShX(glassType)=0:
+                             vShH(glassType)=0:
+                             vUsedY(glassType)=0:
+                             vTokWIP=vTokWIP + 1:NEXT(20$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 4 (Separate Token)
+;
+20$           DUPLICATE,     100 - 50:
+                             1,240$,50:NEXT(239$);
+
+239$          ASSIGN:        Separate Token.NumberOut Orig=Separate Token.NumberOut Orig + 1:NEXT(155$);
+
+240$          ASSIGN:        Separate Token.NumberOut Dup=Separate Token.NumberOut Dup + 1:NEXT(129$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 23 (Decide jumbo senaryo)
+;
+155$          BRANCH,        1:
+                             If,vJumboSenaryo==1,241$,Yes:
+                             Else,242$,Yes;
+241$          ASSIGN:        Decide jumbo senaryo.NumberOut True=Decide jumbo senaryo.NumberOut True + 1:NEXT(13$);
+
+242$          ASSIGN:        Decide jumbo senaryo.NumberOut False=Decide jumbo senaryo.NumberOut False + 1:NEXT(149$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 21 (Decide Decide Fit)
+;
+149$          BRANCH,        1:
+                             If,
+                             vShX(glassType) + width + vKerf <= vJumboW .AND. vUsedY(glassType) + MX(vShH(glassType), height + vKerf) <= vJumboH,
+                             150$,Yes:
+                             If,
+                             vRotOK == 1 .AND. vShX(glassType) + height + vKerf <= vJumboW .AND. vUsedY(glassType) + MX(vShH(glassType), width + vKerf) <= vJumboH,
+                             151$,Yes:
+                             If,width + vKerf <= vJumboW .AND. vUsedY(glassType) + vShH(glassType) + height + vKerf <= vJumboH,
+                             152$,Yes:
+                             If,
+                             vRotOK == 1 .AND. height + vKerf <= vJumboW .AND. vUsedY(glassType) + vShH(glassType) + width + vKerf <= vJumboH,
+                             153$,Yes:
+                             Else,16$,Yes;
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 35 (Assign Yerlestir N)
+;
+150$          ASSIGN:        pW=width:
+                             pH=height:NEXT(13$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 36 (Assign Yerlestir R)
+;
+151$          ASSIGN:        pW=height:
+                             pH=width:NEXT(13$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 37 (Assign YeniSerit N)
+;
+152$          ASSIGN:        pW=width:
+                             pH=height:NEXT(154$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 39 (Assign Serit Ac)
+;
+154$          ASSIGN:        vUsedY(glassType)=vUsedY(glassType) + vShH(glassType):
+                             vShH(glassType)=0:
+                             vShX(glassType)=0:NEXT(13$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 38 (Assign YeniSerit R)
+;
+153$          ASSIGN:        pW=height:
+                             pH=width:NEXT(154$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 7 (Hold Token Buffer)
+;
+129$          QUEUE,         Hold Token Buffer.Queue:DETACH;
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 10 (Search Fit Serit)
+;
+157$          SEARCH,        Hold Glass.Queue,1,NQ(Hold Glass.Queue):
+                             ( (vShX(glassType)+width+vKerf<=vJumboW .AND. vUsedY(glassType)+MX(vShH(glassType),height+vKerf)<=vJumboH)
+ .OR. (vRotOK==1 .AND. vShX(glassType)+height+vKerf<=vJumboW .AND. vUsedY(glassType)+MX(vShH(glassType),width+vKerf)<=vJumboH) )
+.AND.dueDate <= vDay + vDDwin;
+245$          BRANCH,        1:
+                             If,J<>0,246$,Yes:
+                             Else,247$,Yes;
+246$          DELAY:         0.0,,VA:NEXT(160$);
+
+247$          DELAY:         0.0,,VA:NEXT(159$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 13 (Remove Glass A)
+;
+160$          REMOVE:        J,Hold Glass.Queue,156$:NEXT(202$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 11 (Search Fit YeniSerit)
+;
+159$          SEARCH,        Hold Glass.Queue,1,NQ(Hold Glass.Queue):
+                             ( (width+vKerf<=vJumboW .AND. vUsedY(glassType)+vShH(glassType)+height+vKerf<=vJumboH) .OR. (vRotOK==1 .AND. height+vKerf<=vJumboW .AND. vUsedY(glassType)+vShH(glassType)+width+vKerf<=vJumboH) )
+.AND. dueDate <= vDay+ vDDwin;
+248$          BRANCH,        1:
+                             If,J<>0,249$,Yes:
+                             Else,250$,Yes;
+249$          DELAY:         0.0,,VA:NEXT(161$);
+
+250$          DELAY:         0.0,,VA:NEXT(11$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 14 (Remove Glass B)
+;
+161$          REMOVE:        J,Hold Glass.Queue,156$:NEXT(202$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Create 3 (Create Jumbo Flush)
+;
+
+251$          CREATE,        1,MinutesToBaseTime(5),Packer:MinutesToBaseTime(5),1:NEXT(252$);
+
+252$          ASSIGN:        Create Jumbo Flush.NumberOut=Create Jumbo Flush.NumberOut + 1:NEXT(57$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 15 (Assign FJ Init)
+;
+57$           ASSIGN:        vFJPend=0:
+                             vF=0:NEXT(58$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 16 (Assign FJ Inc)
+;
+58$           ASSIGN:        vF=vF + 1:NEXT(59$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 9 (Decide FJ Loop)
+;
+59$           BRANCH,        1:
+                             If,vF>12,163$,Yes:
+                             If,
+                             vAccum(vF)>0 .and. vStarve==1 .and. vJMin(vF) <= vCurOrder.and. ( TNOW - vJOpenT(vF) >= SecondsToBaseTime(vJGrace)  .or.  vAccum(vF) >= 0.85*vJumboArea ),
+                             60$,Yes:
+                             Else,58$,Yes;
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 27 (Decide FJ Tekrar)
+;
+163$          BRANCH,        1:
+                             If,vFJPend==1,257$,Yes:
+                             Else,258$,Yes;
+257$          ASSIGN:        Decide FJ Tekrar.NumberOut True=Decide FJ Tekrar.NumberOut True + 1:NEXT(57$);
+
+258$          ASSIGN:        Decide FJ Tekrar.NumberOut False=Decide FJ Tekrar.NumberOut False + 1:NEXT(164$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 9 (Hold FJ Wait)
+;
+164$          QUEUE,         Hold FJ Wait.Queue;
+              WAIT:          101:NEXT(57$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 17 (Assign FJ Close)
+;
+60$           ASSIGN:        vCloseID=vF*10000+vJumboNo(vF):
+                             vCloseSize=vCnt(vF):
+                             vFill=vAccum(vF)/vJumboArea:NEXT(61$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 3 (Record FJ Fill)
+;
+61$           TALLY:         Jumbo Fill Flush,vFill,1:NEXT(62$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.ReadWrite 4 (Write FJ Result)
+;
+62$           WRITE,         jumboResults:
+                             vF,
+                             vJumboNo(vF),
+                             vCloseSize,
+                             vAccum(vF),
+                             vFill:NEXT(63$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 18 (Assign FJ Reset Token)
+;
+63$           ASSIGN:        tokMin=vJMin(vF):
+                             tokMax=vJMax(vF):
+                             vJumboNo(vF)=vJumboNo(vF)+1:
+                             vAccum(vF)=0:
+                             vCnt(vF)=0:
+                             vShX(vF)=0:
+                             vShH(vF)=0:
+                             vUsedY(vF)=0:
+                             tokJumbo=vCloseID:
+                             tokN=vCloseSize:
+                             vTokWIP=vTokWIP + 1:NEXT(64$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 6 (Separate FJ Token)
+;
+64$           DUPLICATE,     100 - 50:
+                             1,261$,50:NEXT(260$);
+
+260$          ASSIGN:        Separate FJ Token.NumberOut Orig=Separate FJ Token.NumberOut Orig + 1:NEXT(58$);
+
+261$          ASSIGN:        Separate FJ Token.NumberOut Dup=Separate FJ Token.NumberOut Dup + 1:NEXT(129$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Create 4 (Create Temper Flush)
+;
+
+262$          CREATE,        1,MinutesToBaseTime(5),Packer:MinutesToBaseTime(5),1:NEXT(263$);
+
+263$          ASSIGN:        Create Temper Flush.NumberOut=Create Temper Flush.NumberOut + 1:NEXT(65$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 19 (Assign FT Init)
+;
+65$           ASSIGN:        vFTPend=0:
+                             vF=0:NEXT(66$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 20 (Assign FT Inc)
+;
+66$           ASSIGN:        vF=vF+1:NEXT(67$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 10 (Decide FT Loop)
+;
+67$           BRANCH,        1:
+                             If,vF>12,176$,Yes:
+                             If,vWAccum(vF) > 0 .and. TNOW - vTOpenT(vF) >= SecondsToBaseTime(vTmax),68$,Yes:
+                             Else,66$,Yes;
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 30 (Decide FT Tekrar)
+;
+176$          BRANCH,        1:
+                             If,vFTPend>=1,268$,Yes:
+                             Else,269$,Yes;
+268$          ASSIGN:        Decide FT Tekrar.NumberOut True=Decide FT Tekrar.NumberOut True + 1:NEXT(65$);
+
+269$          ASSIGN:        Decide FT Tekrar.NumberOut False=Decide FT Tekrar.NumberOut False + 1:NEXT(177$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 10 (Hold FT Wait)
+;
+177$          QUEUE,         Hold FT Wait.Queue;
+              WAIT:          102:NEXT(65$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 21 (Assign FT Close)
+;
+68$           ASSIGN:        vTCloseID=vF*100000+vTempNo(vF):
+                             vTCloseSize=vWCnt(vF):
+                             vWFill=vWAccum(vF)/vFurnaceWidth(vFurnaceOf(vF)):
+                             vBedSize(vF)=vWCnt(vF):NEXT(69$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 4 (Record FT Fill)
+;
+69$           TALLY:         Temper Fill,vWFill,1:NEXT(70$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.ReadWrite 5 (Write FT Result)
+;
+70$           WRITE,         tempResults:
+                             vF,
+                             vTempNo(vF),
+                             vTCloseSize,
+                             vWAccum(vF),
+                             vWFill:NEXT(71$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 22 (Assign FT Reset)
+;
+71$           ASSIGN:        vTempNo(vF)=vTempNo(vF)+1:
+                             vWAccum(vF)=0:
+                             vWCnt(vF)=0:NEXT(72$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 4 (Search FT Load)
+;
+72$           SEARCH,        Hold Temper Build.Queue,1,NQ(Hold Temper Build.Queue):tempID==vTCloseID;
+270$          BRANCH,        1:
+                             If,J<>0,271$,Yes:
+                             Else,272$,Yes;
+271$          DELAY:         0.0,,VA:NEXT(73$);
+
+272$          DELAY:         0.0,,VA:NEXT(66$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 5 (Remove FT Load)
+;
+73$           REMOVE:        J,Hold Temper Build.Queue,54$:NEXT(72$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Batch 1 (Batch Furnace Load)
+;
+54$           QUEUE,         Batch Furnace Load.Queue;
+273$          GROUP,         tempID,Temporary:vBedSize(AINT(tempID/100000)),Last:NEXT(274$);
+
+274$          ASSIGN:        Batch Furnace Load.NumberOut=Batch Furnace Load.NumberOut + 1:NEXT(55$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 8 (Decide Which Furnace)
+;
+55$           BRANCH,        1:
+                             If,
+                             vFurnaceOf(glassType)==1 .and.
+(NQ(Seize Entrance_1000.Queue) < vDivN .or. NQ(Seize Entrance_1600.Queue) > 0),
+                             275$,Yes:
+                             Else,276$,Yes;
+275$          ASSIGN:        Decide Which Furnace.NumberOut True=Decide Which Furnace.NumberOut True + 1:NEXT(106$);
+
+276$          ASSIGN:        Decide Which Furnace.NumberOut False=Decide Which Furnace.NumberOut False + 1:NEXT(147$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 7 (Seize Entrance_1000)
+;
+106$          QUEUE,         Seize Entrance_1000.Queue;
+              SEIZE,         2,Other:
+                             Furnace_Entrance_1000,1:NEXT(278$);
+
+278$          DELAY:         0.0,,VA:NEXT(108$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 9 (Delay Load Pitch_1000)
+;
+108$          DELAY:         SecondsToBaseTime(tPitch),,Other:NEXT(109$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 7 (Release Entrance_1000)
+;
+109$          RELEASE:       Furnace_Entrance_1000,1:NEXT(110$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 10 (Delay Transit_1000)
+;
+110$          DELAY:         SecondsToBaseTime(tTransit),,Other:NEXT(56$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 5 (Separate Split Load)
+;
+56$           SPLIT::NEXT(279$);
+
+279$          ASSIGN:        Separate Split Load.NumberOut Orig=Separate Split Load.NumberOut Orig + 1:NEXT(74$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 23 (Assign IGU Key)
+;
+74$           ASSIGN:        unitKey=orderNo:
+                             paneCount=2+(glass3<>12):
+                             tIGU=tnow:NEXT(75$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 11 (Decide Pane Count)
+;
+75$           BRANCH,        1:
+                             If,paneCount==2,282$,Yes:
+                             Else,283$,Yes;
+282$          ASSIGN:        Decide Pane Count.NumberOut True=Decide Pane Count.NumberOut True + 1:NEXT(76$);
+
+283$          ASSIGN:        Decide Pane Count.NumberOut False=Decide Pane Count.NumberOut False + 1:NEXT(83$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 12 (Route Pane 2)
+;
+76$           BRANCH,        1:
+                             If,glassNo==1,284$,Yes:
+                             Else,285$,Yes;
+284$          ASSIGN:        Route Pane 2.NumberOut True=Route Pane 2.NumberOut True + 1:NEXT(77$);
+
+285$          ASSIGN:        Route Pane 2.NumberOut False=Route Pane 2.NumberOut False + 1:NEXT(80$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Match 1 (Match IGU2)
+;
+77$           QUEUE,         Match IGU2.Queue1:DETACH;
+80$           QUEUE,         Match IGU2.Queue2:DETACH;
+              MATCH,         unitKey:
+                             77$,82$:
+                             80$,82$;
+
+;
+;
+;     Model statements for module:  BasicProcess.Batch 2 (Batch IGU)
+;
+82$           QUEUE,         Batch IGU.Queue;
+286$          GROUP,         unitKey,Permanent:paneCount,Last:NEXT(287$);
+
+287$          ASSIGN:        Batch IGU.NumberOut=Batch IGU.NumberOut + 1:NEXT(197$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 51 (Assign IGU Arr)
+;
+197$          ASSIGN:        vIGUArr(orderNo)=vIGUArr(orderNo) + 1:NEXT(184$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 13 (Hold IGU Order)
+;
+184$          QUEUE,         Hold IGU Order.Queue;
+              SCAN:          vIGUArr(vIGUCurOrder) > vIGUPassed(vIGUCurOrder):NEXT(198$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 52 (Assign IGU Pass)
+;
+198$          ASSIGN:        vIGUPassed(orderNo)=vIGUPassed(orderNo) + 1:NEXT(186$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 9 (Seize IGU)
+;
+186$          QUEUE,         Seize IGU.Queue;
+              SEIZE,         2,Other:
+                             IGU_1,1:NEXT(289$);
+
+289$          DELAY:         0.0,,VA:NEXT(188$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 48 (Assign IGU Setup)
+;
+188$          ASSIGN:        sTime=(orderNo <> vIGULastOrder) * tSetupIGU:
+                             vIGULastOrder=orderNo:NEXT(189$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 19 (Delay IGU)
+;
+189$          DELAY:         SecondsToBaseTime(sTime + TRIA(24, 27, 32)),,Other:NEXT(190$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 9 (Release IGU)
+;
+190$          RELEASE:       IGU_1,1:NEXT(191$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 49 (Assign IGU Done)
+;
+191$          ASSIGN:        vIGUDone(orderNo)=vIGUDone(orderNo) + 1:NEXT(192$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 31 (Decide IGU Bitti)
+;
+192$          BRANCH,        1:
+                             If,vIGUDone(vIGUCurOrder) >= vOrderNeed(vIGUCurOrder) .and. vOrderNeed(vIGUCurOrder) > 0,290$,Yes:
+                             Else,291$,Yes;
+290$          ASSIGN:        Decide IGU Bitti.NumberOut True=Decide IGU Bitti.NumberOut True + 1:NEXT(193$);
+
+291$          ASSIGN:        Decide IGU Bitti.NumberOut False=Decide IGU Bitti.NumberOut False + 1:NEXT(117$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 50 (Assign IGU Next)
+;
+193$          ASSIGN:        vIGUCurOrder=vIGUCurOrder + 1:NEXT(117$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 5 (Record Cycle Time)
+;
+117$          TALLY:         Cycle Order_IGU,INT(tStart),1:NEXT(118$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 9 (Record Cycle IGU)
+;
+118$          TALLY:         Cycle IGU,INT(tIGU),1:NEXT(119$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 10 (Record Line Cycle)
+;
+119$          TALLY:         Cycle Kesim_IGU,INT(tKesim),1:NEXT(179$);
+
+179$          WRITE,         iguResults:
+                             
+                             unitKey, orderNo, jumboID, paneCount, glass1, glass2, glass3,
+ width, height, area, orderDate, dueDate,
+ tkesim, tIGU, TNOW, TNOW-tkesim, TNOW-tIGU
+                             :NEXT(207$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 11 (Record Count IGU)
+;
+207$          COUNT:         Record Count IGU,1:NEXT(89$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Dispose 8 (Dispose IGU)
+;
+89$           ASSIGN:        Dispose IGU.NumberOut=Dispose IGU.NumberOut + 1;
+292$          DISPOSE:       Yes;
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 13 (Decide Pane 3)
+;
+83$           BRANCH,        1:
+                             If,glassNo==1,84$,Yes:
+                             If,glassNo==2,87$,Yes:
+                             Else,85$,Yes;
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Match 2 (Match 2)
+;
+84$           QUEUE,         Match 2.Queue1:DETACH;
+87$           QUEUE,         Match 2.Queue2:DETACH;
+85$           QUEUE,         Match 2.Queue3:DETACH;
+              MATCH,         unitKey:
+                             84$,82$:
+                             87$,82$:
+                             85$,82$;
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 34 (Assign Divert 1600)
+;
+147$          ASSIGN:        tFurn=2:
+                             vspeed=vL_heat(2) / tHeat:
+                             tPitch=vRowGap / vspeed:
+                             tTransit=vFurnLen(2) / vspeed:NEXT(111$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 8 (Seize Entrance_1600)
+;
+111$          QUEUE,         Seize Entrance_1600.Queue;
+              SEIZE,         2,Other:
+                             Furnace_Entrance_1600,1:NEXT(296$);
+
+296$          DELAY:         0.0,,VA:NEXT(113$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 11 (Delay Load Pitch_1600)
+;
+113$          DELAY:         SecondsToBaseTime(tPitch),,Other:NEXT(114$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 8 (Release Entrance_1600)
+;
+114$          RELEASE:       Furnace_Entrance_1600,1:NEXT(115$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 12 (Delay Transit_1600)
+;
+115$          DELAY:         SecondsToBaseTime(tTransit),,Other:NEXT(56$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Create 5 (Create sequencer)
+;
+
+297$          CREATE,        1,MinutesToBaseTime(1),sequencer:MinutesToBaseTime(EXPO(1)),1:NEXT(298$);
+
+298$          ASSIGN:        Create sequencer.NumberOut=Create sequencer.NumberOut + 1:NEXT(124$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 28 (Assign 28)
+;
+124$          ASSIGN:        vCurOrder=1:NEXT(123$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 15 (Decide 15)
+;
+123$          BRANCH,        1:
+                             If,
+                             vOrderFed(vCurOrder) >= 2*vOrderNeed(vCurOrder) .and. vCurOrder < vOrdCnt .and. vCurOrder < vIGUCurOrder + vIGUWindow,
+                             125$,Yes:
+                             Else,126$,Yes;
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 16 (Decide 16)
+;
+126$          BRANCH,        1:
+                             If,
+                             vBufG(vCurOrder,1) > vFedG(vCurOrder,1) .and.
+vBufG(vCurOrder,2) > vFedG(vCurOrder,2) .and.
+(vG3of(vCurOrder)==12 .or. vBufG(vCurOrder,3) > vFedG(vCurOrder,3)),
+                             303$,Yes:
+                             Else,304$,Yes;
+303$          ASSIGN:        Decide 16.NumberOut True=Decide 16.NumberOut True + 1:NEXT(200$);
+
+304$          ASSIGN:        Decide 16.NumberOut False=Decide 16.NumberOut False + 1:NEXT(199$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 54 (Assign Starve Off)
+;
+200$          ASSIGN:        vStarve=0:NEXT(136$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 7 (Search G1)
+;
+136$          SEARCH,        Order Buffer.Queue,1,NQ(Order Buffer.Queue):orderNo==vCurOrder .and. glassNo==1;
+305$          BRANCH,        1:
+                             If,J<>0,306$,Yes:
+                             Else,307$,Yes;
+306$          DELAY:         0.0,,VA:NEXT(139$);
+
+307$          DELAY:         0.0,,VA:NEXT(123$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 10 (Remove G1)
+;
+139$          REMOVE:        J,Order Buffer.Queue,143$:NEXT(140$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 31 (Assign G1)
+;
+140$          ASSIGN:        vFedG(vCurOrder,1)=vFedG(vCurOrder,1)+1:
+                             vOrderFed(vCurOrder)=vOrderFed(vCurOrder)+1:NEXT(137$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 8 (Search G2)
+;
+137$          SEARCH,        Order Buffer.Queue,1,NQ(Order Buffer.Queue):orderNo==vCurOrder .and. glassNo==2;
+308$          BRANCH,        1:
+                             If,J<>0,309$,Yes:
+                             Else,310$,Yes;
+309$          DELAY:         0.0,,VA:NEXT(141$);
+
+310$          DELAY:         0.0,,VA:NEXT(123$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 11 (Remove G2)
+;
+141$          REMOVE:        J,Order Buffer.Queue,143$:NEXT(142$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 32 (Assign G2)
+;
+142$          ASSIGN:        vFedG(vCurOrder,2)=vFedG(vCurOrder,2)+1:
+                             vOrderFed(vCurOrder)=vOrderFed(vCurOrder)+1:NEXT(145$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 20 (G3 var mi)
+;
+145$          BRANCH,        1:
+                             If,vG3of(vCurOrder)==12,311$,Yes:
+                             Else,312$,Yes;
+311$          ASSIGN:        G3 var mi.NumberOut True=G3 var mi.NumberOut True + 1:NEXT(123$);
+
+312$          ASSIGN:        G3 var mi.NumberOut False=G3 var mi.NumberOut False + 1:NEXT(138$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 9 (Search G3)
+;
+138$          SEARCH,        Order Buffer.Queue,1,NQ(Order Buffer.Queue):orderNo==vCurOrder .and. glassNo==3;
+313$          BRANCH,        1:
+                             If,J<>0,314$,Yes:
+                             Else,315$,Yes;
+314$          DELAY:         0.0,,VA:NEXT(146$);
+
+315$          DELAY:         0.0,,VA:NEXT(123$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 12 (Remove G3)
+;
+146$          REMOVE:        J,Order Buffer.Queue,143$:NEXT(144$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 33 (Assign G3)
+;
+144$          ASSIGN:        vFedG(vCurOrder,3)=vFedG(vCurOrder,3)+1:
+                             vOrderFed(vCurOrder)=vOrderFed(vCurOrder)+1:NEXT(123$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 19 (Decide Hat)
+;
+143$          BRANCH,        1:
+                             If,myLine==1,316$,Yes:
+                             Else,317$,Yes;
+316$          ASSIGN:        Decide Hat.NumberOut True=Decide Hat.NumberOut True + 1:NEXT(90$);
+
+317$          ASSIGN:        Decide Hat.NumberOut False=Decide Hat.NumberOut False + 1:NEXT(98$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 3 (Seize Rodaj_1 H)
+;
+90$           QUEUE,         Seize Rodaj_1 H.Queue;
+              SEIZE,         2,Other:
+                             Rodaj_1_H,1:NEXT(319$);
+
+319$          DELAY:         0.0,,VA:NEXT(92$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 5 (Delay Height_1)
+;
+92$           DELAY:         SecondsToBaseTime(height/vfeed),,Other:NEXT(93$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 4 (Seize Rodaj_1 W)
+;
+93$           QUEUE,         Seize Rodaj_1 W.Queue;
+              SEIZE,         2,Other:
+                             Rodaj_1_W,1:NEXT(321$);
+
+321$          DELAY:         0.0,,VA:NEXT(95$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 3 (Release Rodaj_1 H)
+;
+95$           RELEASE:       Rodaj_1_H,1:NEXT(96$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 6 (Delay Width_1)
+;
+96$           DELAY:         SecondsToBaseTime(width/vfeed),,Other:NEXT(97$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 4 (Release Rodaj_1 W)
+;
+97$           RELEASE:       Rodaj_1_W,1:NEXT(42$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 5 (Decide Temper?)
+;
+42$           BRANCH,        1:
+                             If,vFurnaceOf(glassType)<>0,322$,Yes:
+                             Else,323$,Yes;
+322$          ASSIGN:        Decide Temper?.NumberOut True=Decide Temper?.NumberOut True + 1:NEXT(43$);
+
+323$          ASSIGN:        Decide Temper?.NumberOut False=Decide Temper?.NumberOut False + 1:NEXT(74$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 11 (Assign Furnace)
+;
+43$           ASSIGN:        tFurn=vFurnaceOf(glassType):
+                             tCap=vFurnaceWidth(tFurn):
+                             tHeat=vHeatT(glassType):
+                             vspeed=vL_heat(tFurn)/tHeat:
+                             tPitch=vRowGap/vspeed:
+                             tTransit=vFurnLen(tFurn)/vspeed:NEXT(44$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 6 (Decide Width Fit)
+;
+44$           BRANCH,        1:
+                             If,tCap>=vWAccum(glassType) + width + vWCnt(glassType)*vGap,324$,Yes:
+                             Else,325$,Yes;
+324$          ASSIGN:        Decide Width Fit.NumberOut True=Decide Width Fit.NumberOut True + 1:NEXT(45$);
+
+325$          ASSIGN:        Decide Width Fit.NumberOut False=Decide Width Fit.NumberOut False + 1:NEXT(48$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 12 (Assign T addOpen)
+;
+45$           ASSIGN:        vWAccum(glassType)=vWAccum(glassType)+width:
+                             vWCnt(glassType)=vWCnt(glassType)+1:
+                             vTOpenT(glassType)=(vWCnt(glassType)==1)*TNOW + (vWCnt(glassType)>1)*vTOpenT(glassType):
+                             tempID=glassType*100000+vTempNo(glassType):NEXT(168$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 28 (FT Yatak Yeni Acildi)
+;
+168$          BRANCH,        1:
+                             If,vWCnt(glassType)==1,326$,Yes:
+                             Else,327$,Yes;
+326$          ASSIGN:        FT Yatak Yeni Acildi.NumberOut True=FT Yatak Yeni Acildi.NumberOut True + 1:NEXT(169$);
+
+327$          ASSIGN:        FT Yatak Yeni Acildi.NumberOut False=FT Yatak Yeni Acildi.NumberOut False + 1:NEXT(46$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Separate 7 (Separate FT Timer)
+;
+169$          DUPLICATE,     100 - 50:
+                             1,330$,50:NEXT(329$);
+
+329$          ASSIGN:        Separate FT Timer.NumberOut Orig=Separate FT Timer.NumberOut Orig + 1:NEXT(46$);
+
+330$          ASSIGN:        Separate FT Timer.NumberOut Dup=Separate FT Timer.NumberOut Dup + 1:NEXT(171$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 4 (Hold Temper Build)
+;
+46$           QUEUE,         Hold Temper Build.Queue:DETACH;
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 17 (Delay FT Timer)
+;
+171$          DELAY:         SecondsToBaseTime(vTmax + 0.01),,Other:NEXT(170$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 40 (Assign FT Timer Coz)
+;
+170$          ASSIGN:        tGT=AINT(tempID / 100000):NEXT(172$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 29 (FT Timer Gecerli mi)
+;
+172$          BRANCH,        1:
+                             If,tGT*100000 + vTempNo(tGT) == tempID  .and.  vWAccum(tGT) > 0,331$,Yes:
+                             Else,332$,Yes;
+331$          ASSIGN:        FT Timer Gecerli mi.NumberOut True=FT Timer Gecerli mi.NumberOut True + 1:NEXT(174$);
+
+332$          ASSIGN:        FT Timer Gecerli mi.NumberOut False=FT Timer Gecerli mi.NumberOut False + 1:NEXT(173$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 41 (Assign FT Sinyal)
+;
+174$          ASSIGN:        vFTPend=1:NEXT(175$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Signal 3 (Signal FT)
+;
+175$          SIGNAL:        102:NEXT(173$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Dispose 11 (Dispose FT Timer)
+;
+173$          ASSIGN:        Dispose FT Timer.NumberOut=Dispose FT Timer.NumberOut + 1;
+333$          DISPOSE:       No;
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 13 (Assign T closeOpen)
+;
+48$           ASSIGN:        vTCloseID=glassType*100000+vTempNo(glassType):
+                             vTCloseSize=vWCnt(glassType):
+                             vWFill=vWAccum(glassType)/tCap:
+                             vBedSize(glassType)=vWCnt(glassType):NEXT(49$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Record 2 (Record Temper Fill)
+;
+49$           TALLY:         Temper Fill,vWFill,1:NEXT(50$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.ReadWrite 3 (Write Temper Result)
+;
+50$           WRITE,         tempResults:
+                             glassType,
+                             vTempNo(glassType),
+                             vTCloseSize,
+                             vWAccum(glassType),
+                             vWFill:NEXT(51$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 14 (Assign T Reset)
+;
+51$           ASSIGN:        vTempNo(glassType)=vTempNo(glassType)+1:
+                             vWAccum(glassType)=0:
+                             vWCnt(glassType)=0:NEXT(52$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 3 (Search Load)
+;
+52$           SEARCH,        Hold Temper Build.Queue,1,NQ(Hold Temper Build.Queue):tempID==vTCloseID;
+334$          BRANCH,        1:
+                             If,J<>0,335$,Yes:
+                             Else,336$,Yes;
+335$          DELAY:         0.0,,VA:NEXT(53$);
+
+336$          DELAY:         0.0,,VA:NEXT(45$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 4 (Remove Load)
+;
+53$           REMOVE:        J,Hold Temper Build.Queue,54$:NEXT(52$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 5 (Seize Rodaj_2 H)
+;
+98$           QUEUE,         Seize Rodaj_2 H.Queue;
+              SEIZE,         2,Other:
+                             Rodaj_2_H,1:NEXT(338$);
+
+338$          DELAY:         0.0,,VA:NEXT(100$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 7 (Delay Height_2)
+;
+100$          DELAY:         SecondsToBaseTime(height/vfeed),,Other:NEXT(101$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 6 (Seize Rodaj_2 W)
+;
+101$          QUEUE,         Seize Rodaj_2 W.Queue;
+              SEIZE,         2,Other:
+                             Rodaj_2_W,1:NEXT(340$);
+
+340$          DELAY:         0.0,,VA:NEXT(103$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 5 (Release Rodaj_2 H)
+;
+103$          RELEASE:       Rodaj_2_H,1:NEXT(104$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 8 (Delay Width_2)
+;
+104$          DELAY:         SecondsToBaseTime(width/vfeed),,Other:NEXT(105$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 6 (Release Rodaj_2 W)
+;
+105$          RELEASE:       Rodaj_2_W,1:NEXT(42$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 53 (Assign Starve On)
+;
+199$          ASSIGN:        vStarve=1:NEXT(127$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 6 (Hold 6)
+;
+127$          QUEUE,         Hold 6.Queue;
+              SCAN:          
+                             (vBufG(vCurOrder,1) > vFedG(vCurOrder,1) .and.
+vBufG(vCurOrder,2) > vFedG(vCurOrder,2) .and.
+(vG3of(vCurOrder)==12 .or. vBufG(vCurOrder,3) > vFedG(vCurOrder,3))) .or. (vOrderFed(vCurOrder) >= 2*vOrderNeed(vCurOrder) .and. vCurOrder < vOrdCnt.and. vCurOrder < vIGUCurOrder +vIGUWindow)
+                             :NEXT(200$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 29 (Assign 29)
+;
+125$          ASSIGN:        vCurOrder=vCurOrder+1:
+                             vFJPend=1:NEXT(167$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Signal 2 (Signal FJ 2)
+;
+167$          SIGNAL:        101:NEXT(123$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Create 6 (Create Dispatcher)
+;
+
+341$          CREATE,        1,MinutesToBaseTime(0.5),Packer:MinutesToBaseTime(EXPO(1)),1:NEXT(342$);
+
+342$          ASSIGN:        Create Dispatcher.NumberOut=Create Dispatcher.NumberOut + 1:NEXT(131$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 8 (Hold Disp)
+;
+131$          QUEUE,         Hold Disp.Queue;
+              SCAN:          NQ(Hold Token Buffer.Queue)>0 .and. (NR(Kesim_1)<1 .or. NR(Kesim_2)<1):NEXT(194$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 32 (Decide Lookahead)
+;
+194$          BRANCH,        1:
+                             If,AQUE(Hold Token Buffer.Queue, 1, NSYM(tokMin)) <= vCurOrder + vLookahead.or.  vStarve == 1,345$,
+                             Yes:
+                             Else,346$,Yes;
+345$          ASSIGN:        Decide Lookahead.NumberOut True=Decide Lookahead.NumberOut True + 1:NEXT(133$);
+
+346$          ASSIGN:        Decide Lookahead.NumberOut False=Decide Lookahead.NumberOut False + 1:NEXT(195$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 8 (Remove Token)
+;
+133$          REMOVE:        1,Hold Token Buffer.Queue,134$:NEXT(135$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 13 (Delay 13)
+;
+135$          DELAY:         0.001666666666667,,Other:NEXT(131$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 18 (Decide Idle Machine)
+;
+134$          BRANCH,        1:
+                             If,NR(Kesim_1)<1,347$,Yes:
+                             Else,348$,Yes;
+347$          ASSIGN:        Decide Idle Machine.NumberOut True=Decide Idle Machine.NumberOut True + 1:NEXT(21$);
+
+348$          ASSIGN:        Decide Idle Machine.NumberOut False=Decide Idle Machine.NumberOut False + 1:NEXT(32$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 1 (Seize Kesim_1)
+;
+21$           QUEUE,         Seize Kesim_1.Queue;
+              SEIZE,         2,Other:
+                             Kesim_1,1:NEXT(350$);
+
+350$          DELAY:         0.0,,VA:NEXT(23$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 7 (Assign CutID1)
+;
+23$           ASSIGN:        vCutID1=tokJumbo:
+                             Entity.Type=glass:NEXT(24$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 1 (Delay Trim_1)
+;
+24$           DELAY:         SecondsToBaseTime(TRIA( 30 , 35 , 45 )),,Other:NEXT(25$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 3 (Decide tokN_1)
+;
+25$           BRANCH,        1:
+                             If,tokN>=1,351$,Yes:
+                             Else,352$,Yes;
+351$          ASSIGN:        Decide tokN_1.NumberOut True=Decide tokN_1.NumberOut True + 1:NEXT(26$);
+
+352$          ASSIGN:        Decide tokN_1.NumberOut False=Decide tokN_1.NumberOut False + 1:NEXT(28$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 2 (Delay Kirim_1)
+;
+26$           DELAY:         SecondsToBaseTime(TRIA( 6, 8, 10)),,Other:NEXT(27$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 1 (Search Pane_1)
+;
+27$           SEARCH,        Hold Jumbo Build.Queue,1,NQ(Hold Jumbo Build.Queue):jumboID==vCutID1;
+353$          BRANCH,        1:
+                             If,J<>0,354$,Yes:
+                             Else,355$,Yes;
+354$          DELAY:         0.0,,VA:NEXT(29$);
+
+355$          DELAY:         0.0,,VA:NEXT(30$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 2 (Remove Pane_1)
+;
+29$           REMOVE:        J,Hold Jumbo Build.Queue,182$:NEXT(30$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 8 (Assign DecN_1)
+;
+30$           ASSIGN:        tokN=tokN - 1:NEXT(25$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 46 (Assign Hat K1)
+;
+182$          ASSIGN:        myLine=1:
+                             tKesim=tnow:NEXT(120$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 27 (Assign 27)
+;
+120$          ASSIGN:        vBufG(orderNo,glassNo)=vBufG(orderNo, glassNo) + 1:NEXT(121$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 5 (Order Buffer)
+;
+121$          QUEUE,         Order Buffer.Queue:DETACH;
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 1 (Release Kesim_1)
+;
+28$           RELEASE:       Kesim_1,1:NEXT(201$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 55 (Assign Token Done)
+;
+201$          ASSIGN:        vTokWIP=vTokWIP - 1:NEXT(31$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Dispose 2 (Dispose Token)
+;
+31$           ASSIGN:        Dispose Token.NumberOut=Dispose Token.NumberOut + 1;
+356$          DISPOSE:       No;
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Seize 2 (Seize Kesim_2)
+;
+32$           QUEUE,         Seize Kesim_2.Queue;
+              SEIZE,         2,Other:
+                             Kesim_2,1:NEXT(358$);
+
+358$          DELAY:         0.0,,VA:NEXT(34$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 9 (Assign CutID2)
+;
+34$           ASSIGN:        vCutID2=tokJumbo:
+                             Entity.Type=glass:NEXT(35$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 3 (Delay Trim_2)
+;
+35$           DELAY:         SecondsToBaseTime(TRIA( 30 , 35 , 45 )),,Other:NEXT(36$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Decide 4 (Decide tokN_2)
+;
+36$           BRANCH,        1:
+                             If,tokN>=1,359$,Yes:
+                             Else,360$,Yes;
+359$          ASSIGN:        Decide tokN_2.NumberOut True=Decide tokN_2.NumberOut True + 1:NEXT(37$);
+
+360$          ASSIGN:        Decide tokN_2.NumberOut False=Decide tokN_2.NumberOut False + 1:NEXT(39$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Delay 4 (Delay Kirim_2)
+;
+37$           DELAY:         SecondsToBaseTime(TRIA( 6, 8, 10)),,Other:NEXT(38$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Search 2 (Search Pane_2)
+;
+38$           SEARCH,        Hold Jumbo Build.Queue,1,NQ(Hold Jumbo Build.Queue):jumboID==vCutID2;
+361$          BRANCH,        1:
+                             If,J<>0,362$,Yes:
+                             Else,363$,Yes;
+362$          DELAY:         0.0,,VA:NEXT(40$);
+
+363$          DELAY:         0.0,,VA:NEXT(41$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Remove 3 (Remove Pane_2)
+;
+40$           REMOVE:        J,Hold Jumbo Build.Queue,183$:NEXT(41$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 10 (Assign DecN_2)
+;
+41$           ASSIGN:        tokN=tokN - 1:NEXT(36$);
+
+
+;
+;
+;     Model statements for module:  BasicProcess.Assign 47 (Assign Hat K2)
+;
+183$          ASSIGN:        myLine=2:
+                             tKesim=tnow:NEXT(120$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Release 2 (Release Kesim_2)
+;
+39$           RELEASE:       Kesim_2,1:NEXT(201$);
+
+
+;
+;
+;     Model statements for module:  AdvancedProcess.Hold 14 (Hold Disp Lookahead)
+;
+195$          QUEUE,         Hold Disp Lookahead.Queue;
+              SCAN:          AQUE(Hold Token Buffer.Queue, 1, NSYM(tokMin)) <= vCurOrder + vLookahead .OR. vStarve == 1
+                             :NEXT(131$);
+
+
+
+
+
+
+
+
+

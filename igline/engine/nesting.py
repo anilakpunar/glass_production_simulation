@@ -22,7 +22,7 @@ class JumboState:
     """Open-jumbo state for one glass type (vShX, vShH, vUsedY, vAccum, vCnt,
     vJMin, vJMax, vJOpenT, vJumboNo)."""
     glass_type: int
-    jumbo_no: int = 1
+    jumbo_no: int = 0            # Arena vJumboNo starts at 0
     sh_x: float = 0.0
     sh_h: float = 0.0
     used_y: float = 0.0
@@ -81,7 +81,7 @@ def add_open(st: JumboState, pw: float, ph: float, area: float, order_no: int,
     st.accum += area
     st.cnt += 1
     st.j_min = min(st.j_min, order_no)
-    st.j_max = max(st.j_max, order_no)
+    st.j_max = order_no           # Arena overwrites with the latest order
     st.piece_seqs.append(seq)
     return st.jumbo_id
 

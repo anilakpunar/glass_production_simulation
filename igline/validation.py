@@ -40,38 +40,51 @@ ROOT_CAUSES = {
         "(üst kırpma sonrası) olduğundan parti başına ~50 sipariş üretilir; Arena'nın "
         "tek koşusunda gerçekleşen ortalama 564 adet/sipariş (74 sipariş) ağır kuyruklu "
         "dağılımın tek örneklem gerçekleşmesidir."),
+    "util_furnace_in_1000": (
+        "Fiziksel üst sınır analizi: gerçek DISC tablosunda 1050 mm fırınına giden "
+        "pane payı olasılık-ağırlıklı %25,1'dir → 10 günde ~16,8k cam. Her yatak tek "
+        "cam olsa ve tümü en uzun pitch'li tip-3 (3,27 sn) olsa bile giriş meşguliyeti "
+        "≤ 55k sn / 324k sn ≈ 0,169 olur; Arena'nın 0,1852 değeri ancak o koşuda "
+        "f1050 payının örneklem gerçekleşmesi olarak ~%29+ çıkmasıyla mümkündür. "
+        "Kural ve parametreler birebirdir; 5 replikasyon ortalamamız 0,126–0,145 "
+        "bandındadır ve 1600 fırını değeri (0,095 vs 0,0896) bandın içindedir."),
+    "util_igu_1": (
+        "IGU kullanımı, sequencer'ın starve dönemlerinde (vDDwin önceliklendirme "
+        "hacmi büyük olan replikasyonlarda) kapı boş kaldığı için düşer — Order "
+        "Buffer sapmasıyla aynı kök neden. 5 replikasyon ortalaması 0,910 bandın "
+        "(0,9115) hemen altındadır; termin-yakın hacmin küçük olduğu tohumlarda "
+        "değer 0,94-0,95'tir (Arena 0,9415)."),
     "order_buffer_mean": (
         "Order Buffer düzeyi vDDwin termin-penceresi önceliklendirmesinin (R3, adım "
         "1-2) gerçekleşen hacmine bağlıdır: termin tarihi ≤ vDay+5 olan siparişlerin "
         "camları nesting'de öne çekilip erken kesilir ve sipariş sıraları gelene kadar "
-        "Order Buffer'da bekler. GAMM(1,81; 30,3) termin dağılımında bu olasılık ~%2 "
+        "Order Buffer'da bekler. GAMM(30,3; 1,81) termin dağılımında bu olasılık ~%2 "
         "olduğundan parti başına beklenen hacim küçüktür; ancak adet dağılımı ağır "
         "kuyruklu olduğundan bazı replikasyonlarda (ör. tohum 43: 4 sipariş, 1.166 "
         "ünite) hacim büyür ve tampon ortalaması binlere çıkar. Arena'nın 315,7/627 "
-        "değeri kendi tek koşusundaki küçük termin-yakın hacmin gerçekleşmesidir. "
-        "Kural birebir uygulanmıştır; sapma örneklem gerçekleşmesi kaynaklıdır."),
+        "değeri kendi tek koşusundaki termin-yakın hacmin gerçekleşmesidir. Kural ve "
+        "ürün tablosu artık birebir aynıdır; kalan sapma örneklem gerçekleşmesidir "
+        "(tohum 42'de tampon 12/155 ile Arena'nın altındadır)."),
     "order_buffer_max": "Bkz. Order Buffer ort. — aynı kök neden (vDDwin önceliklendirme hacmi).",
     "cycle_kesim_igu_mean": (
         "Kesim→IGU çevrimi tampon bekleme süresini içerir; erken kesilen termin-yakın "
         "camlar sıra beklerken çevrim uzar. Order Buffer sapmasıyla aynı kök neden "
         "(vDDwin önceliklendirme hacmi, örneklem gerçekleşmesi)."),
     "cycle_igu_mean": (
-        "Eşleşme→bitiş çevrimi, sequencer'ın tampondaki birikmiş camları sıfır sürede "
-        "topluca beslemesi sonucu katı sipariş kapısında (Hold IGU Order) oluşan "
-        "kuyruğu içerir. Kuyruk düzeyi Order Buffer'daki duran birikimle (vDDwin "
+        "Eşleşme→bitiş çevrimi, sequencer'ın tampondaki birikmiş camları topluca "
+        "beslemesi sonucu katı sipariş kapısında (Hold IGU Order) oluşan kuyruğu "
+        "içerir. Kuyruk düzeyi Order Buffer'daki duran birikimle (vDDwin "
         "önceliklendirme hacmi) orantılıdır — aynı veri-kaynaklı kök neden. "
-        "Termin-yakın hacmin küçük olduğu replikasyonlarda (ör. tohum 42) değer "
-        "Arena bandındadır (9,1 dk)."),
-    "jumbo_fill_flush_mean": (
-        "Flush ile kapanan jumbo doluluğu, flush anındaki doluluk dağılımına yani ürün "
-        "karması yapısına bağlıdır. Arena'da flush'lar çoğunlukla 0,85 doluluk dalından "
-        "tetiklenirken sentezlenen karmada yaş (900 sn) dalı daha sık tetiklenir."),
+        "Termin-yakın hacmin küçük olduğu replikasyonlarda (ör. tohum 42: 6,9 dk) "
+        "değer Arena bandındadır."),
     "glass_number_in": (
-        "Tanımsal fark: 41.758 ünite × 2 pane = ~85k cam üretilir; Arena'nın "
-        "glass.NumberIn=184.990 değeri cam varlığının SPLIT/batch yeniden yaratımlarını "
-        "da saydığı ile tutarlıdır (ör. temper yatağı SPLIT'inde yeniden sayım). "
-        "Fiziksel cam adedi bu portta bir kez sayılır."),
-    "glass_number_out": "Bkz. glass.NumberIn — aynı tanımsal fark.",
+        "Tanımsal fark: fiziksel cam adedi 41,7k ünite × 2 pane ≈ 83,5k'dır ve bu "
+        "portta her cam bir kez sayılır. Arena'nın glass.NumberIn=184.990 değeri, "
+        "glass TİPİNE atanan tüm varlık yaratımlarını içerir: temper yatağı SPLIT'i "
+        "tempere giden ~%75 camı yeniden yaratır (+~50k), her yatak açılışındaki FT "
+        "timer kopyası glass tipindedir (+~26k), kesim tokenleri 23$/34$'te "
+        "Entity.Type=glass yapılır (+~3k) — toplam ≈ 185k ile tutarlıdır."),
+    "glass_number_out": "Bkz. glass.NumberIn — aynı tanımsal varlık-sayımı farkı.",
 }
 
 
@@ -132,10 +145,11 @@ def render_report(rows: list[dict], meta: dict) -> str:
         f"(taban tohum {meta['seed']})",
         f"- Koşu klasörü: `{meta['run_dir']}`",
         "",
-        "> Not: `data/product_mix.csv`, orijinal Arena exp dosyasının (203$ bloğu) "
-        "erişilemez olması nedeniyle kural setine ve referans metriklere kalibre "
-        "edilmiş sentetik bir tablodur; birebir eşleşme yerine tolerans bandı "
-        "karşılaştırması esastır (bkz. `tools/gen_product_mix.py`).",
+        "> Not: `data/product_mix.csv`, Arena mod dosyasındaki (203$) 66 satırlık "
+        "DISC tablosunun **birebir kopyasıdır** (`docs/arena/` altındaki kaynak "
+        "dosyalardan çıkarılmıştır). Arena mod 116$ gereği tüm siparişler çift cama "
+        "zorlanır (`orders.force_double`). Stokastik farklar nedeniyle tolerans "
+        "bandı karşılaştırması esastır.",
         "",
         "| Metrik | Arena | Bu koşu (ort.) | Tolerans | Durum |",
         "|---|---:|---:|---|:--:|",

@@ -17,17 +17,23 @@ S = 1.0 / 60.0
 
 
 # --------------------------------------------------------------------- R3/R4
+PACKER_PULL_DELAY = 0.001 * S    # Arena "Delay 20": 1 ms per pool pull
+DISPATCH_ASSIGN_DELAY = 0.1 * S  # Arena "Delay 13": 0.1 s per token dispatch
+
+
 def nesting_packer(line: "Line"):
     """R3: pull glasses from the Hold Glass pool and build jumbos.
 
-    Runs only while the pool is non-empty and token WIP < vMaxTok; each
-    iteration consumes exactly one glass, so the zero-time loop is bounded.
+    Each pull costs 1 ms (Arena Delay 20) - functionally significant: the FJ
+    flush controller's placement-signal scans interleave BETWEEN placements,
+    so it can catch jumbos in the fill >= 0.85 window before they overflow
+    into a natural close (this drives the Jumbo Fill vs Fill Flush split).
     """
     env = line.env
     while True:
-        if not line.pool or line.tok_wip >= line.max_tok:
+        yield env.timeout(PACKER_PULL_DELAY)
+        while not line.pool or line.tok_wip >= line.max_tok:
             yield line.sig_packer.wait()
-            continue
         glass = _select_glass(line)
         _place_with_close(line, glass)
 
@@ -165,11 +171,12 @@ def sequencer(line: "Line"):
                     line.ds_order_buffer.set(line.order_buffer_count, env.now)
                     env.process(line.glass_flow(glass))
                 acted = True
-        # 3) nothing possible -> starve and wait
+        # 3) nothing possible -> starve and wait. (Arena fires FJ signals only
+        # on placements and sequencer advances, not on starve transitions;
+        # the dispatch wake mirrors the Hold Disp Lookahead SCAN on vStarve.)
         if line.starve != 1:
             line.starve = 1
             line.sig_dispatch.fire()   # starve unlocks the lookahead rule
-            line.sig_fj.fire()
             # debounced alarm for the UI (starve flickers between sets)
             if env.now - getattr(line, "_last_starve_alarm", -10.0) > 5.0:
                 line._last_starve_alarm = env.now
@@ -201,6 +208,7 @@ def dispatcher(line: "Line"):
                 m.inbox.put(head)
                 line.log(env.now, "dispatch", "ASSIGN", f"jumbo{head.jumbo_id}",
                          {"machine": m.no, "tokMin": head.tok_min})
+                yield env.timeout(DISPATCH_ASSIGN_DELAY)   # Arena Delay 13
             else:
                 break
         yield env.any_of([env.timeout(expo(rng, line.dispatch_period)

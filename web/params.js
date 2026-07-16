@@ -20,7 +20,9 @@ const PARAM_META = {
     qty_cap: { l: "Adet üst sınırı", a: "MN(..,2500)", u: "adet", min: 1, max: 50000 },
     due_gamma_shape: { l: "Termin Gamma shape", a: "GAMM α", u: "—", min: 0.1, max: 20, step: 0.01 },
     due_gamma_scale: { l: "Termin Gamma scale", a: "GAMM β", u: "gün", min: 0.1, max: 365, step: 0.1 },
-    product_mix_file: { l: "Ürün karması dosyası", a: "DISC", u: "csv", type: "text" }
+    product_mix_file: { l: "Ürün karması dosyası", a: "DISC", u: "csv", type: "text" },
+    force_double: { l: "Tüm siparişler çift cam", a: "116$ glass3=12", u: "—", type: "bool",
+      tip: "Arena mod 116$: ürün kodundan bağımsız glass3=12 atanır (Senaryo 3)" }
   }},
   nesting: { title: "Nesting / Jumbo", fields: {
     jumbo_w_mm: { l: "Jumbo genişlik", a: "vJumboW", u: "mm", min: 1000, max: 12000 },

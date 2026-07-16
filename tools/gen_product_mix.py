@@ -1,10 +1,12 @@
-"""Generate data/product_mix.csv (66-row DISC product table).
+"""[SUPERSEDED] Synthetic product-mix generator - kept for history only.
 
-PROVENANCE NOTE
----------------
-The original Arena Scenario 3 experiment file (`senaryo3_exp_dosyası.txt`,
-block 203$) that holds the authoritative 66-row DISC table was not available
-in this repository. This script synthesizes a *calibrated stand-in* table that
+The authoritative 66-row DISC table is now shipped verbatim in
+data/product_mix.csv, extracted from the real Arena mod file (203$ block,
+see docs/arena/senaryo3_mod_dosyasi.txt). Do NOT run this script unless you
+deliberately want to overwrite the real table with a synthetic one; restore
+the real table afterwards with tools/extract_product_mix.py.
+
+Original synthesis notes: this script produced a calibrated stand-in that
 
   * keeps the one documented row verbatim as row 1: (0.06246, 15125261778),
   * follows the exact product-code encoding decoded by the model:
